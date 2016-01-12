@@ -45,7 +45,7 @@ public class IntegrationTest {
 
     @Test
     public void test() throws Exception {
-        Thread.sleep(30000);
+        Thread.sleep(50000);
         try{
             EventGenerator clickEventGenerator = EventGeneratorFactory.getClickEventGenerator(
                     100, 10, new EventGeneratorListenerImpl());
@@ -54,7 +54,7 @@ public class IntegrationTest {
             logger.error("", ex);
         }
 
-        Thread.sleep(30000);
+        Thread.sleep(50000);
         ReportingProcessor reportingProcessor = new ReportingProcessor();
         String value = reportingProcessor.processRequestAndGetBody("/user");
         Assert.assertEquals("I got a response: 1000",value);
