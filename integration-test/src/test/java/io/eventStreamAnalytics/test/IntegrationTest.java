@@ -39,8 +39,10 @@ public class IntegrationTest {
 
     private void cleanUp() throws IOException {
         File file = new File("target/tmp");
-        logger.debug("Deleting Temp File from:" + file.getAbsolutePath());
-        FileUtils.forceDelete(file);
+        if(file.exists()){
+            logger.debug("Deleting Temp File from:" + file.getAbsolutePath());
+            FileUtils.forceDelete(file);
+        }
     }
 
     @Test
