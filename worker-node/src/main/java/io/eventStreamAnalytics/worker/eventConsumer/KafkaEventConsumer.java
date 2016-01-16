@@ -32,8 +32,8 @@ public class KafkaEventConsumer {
     public KafkaEventConsumer() {
         logger.debug("Initilizing Consumer");
         Config config = ConfigFactory.load();
-        Config eventStreamAnalyticsFront = config.getConfig("EventStreamAnalyticsFront");
-        ActorSystem system = ActorSystem.create("EventStreamAnalyticsWorker", eventStreamAnalyticsFront);
+        Config eventStreamAnalyticsWorker = config.getConfig("EventStreamAnalyticsWorker");
+        ActorSystem system = ActorSystem.create("EventStreamAnalyticsWorker", eventStreamAnalyticsWorker);
         eventActor = system.actorOf(Props.create(EventActor.class), "eventHandler");
         Properties props = new Properties();
         props.put("zookeeper.connect", "localhost:2181");
