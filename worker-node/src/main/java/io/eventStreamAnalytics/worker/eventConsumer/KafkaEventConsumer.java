@@ -39,6 +39,9 @@ public class KafkaEventConsumer {
         props.put("zookeeper.connect", "localhost:2181");
         props.put("group.id", "eventProcessor");
         props.put("client.id", "workerEventProcessor");
+        props.put("zookeeper.sync.time.ms", "200");
+        props.put("auto.commit.interval.ms", "1000");
+        props.put("auto.offset.reset", "smallest");
         ConsumerConfig consumerConfig = new ConsumerConfig(props);
         consumerConnector = Consumer.createJavaConsumerConnector(consumerConfig);
         logger.debug("Intialized Consumer");
@@ -46,7 +49,8 @@ public class KafkaEventConsumer {
 
     public void start() {
         Map<String, List<KafkaStream<String, String>>> topicMessageStreams =
-                consumerConnector.createMessageStreams(ImmutableMap.of("events", 1), new StringDecoder(null), new StringDecoder(null));
+                consumerConnector.createMessageStreams(ImmutableMap.of("events", 1),
+                        new StringDecoder(null), new StringDecoder(null));
 
         List<KafkaStream<String, String>> events = topicMessageStreams.get("events");
         if (events.size() != 1) {
