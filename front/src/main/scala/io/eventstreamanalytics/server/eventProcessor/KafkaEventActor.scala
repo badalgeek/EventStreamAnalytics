@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Date
 
 import akka.actor.{Actor, ActorLogging}
+import akka.event.Logging
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 
 import scala.util.Random
@@ -12,9 +13,10 @@ import scala.util.Random
 /**
   * Created by badal on 1/6/16.
   */
-class KafkaEventActor extends Actor with ActorLogging {
+class KafkaEventActor extends Actor {
 
   private val producer = new KafkaProducer[String, String](KafkaConfig())
+  val log = Logging(context.system.eventStream, this.getClass.getName)
 
   private val format: SimpleDateFormat = new SimpleDateFormat("yyyy.MM.dd.hh:mm:ss:SSS:")
   private val random = new Random()

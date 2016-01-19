@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="zookeeper" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/zookeeper.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="zookeeperClient" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/zookeeper-client.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafkaServer" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/kafka-server.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafkaController" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/kafka-controller.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafkaConsumer" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/kafka-consumer.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafkaRequest" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/kafka-request.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafkaClient" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/kafka-client.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="kafka" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/kafka.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="httpwire" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/http.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="reporter" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/reporter.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="frontServer" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/frontServer.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="worker" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/worker.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="awsClient" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/awsClient.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="hazelcast" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/hazelcast.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="akka" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/akk.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <logger name="org.apache.zookeeper" level="DEBUG" additivity="false">
+        <appender-ref ref="zookeeper"/>
+    </logger>
+
+    <logger name="org.I0Itec.zkclient" level="DEBUG" additivity="false">
+        <appender-ref ref="zookeeperClient"/>
+    </logger>
+
+    <logger name="kafka.server" level="DEBUG" additivity="false">
+        <appender-ref ref="kafkaServer"/>
+    </logger>
+
+    <logger name="kafka.consumer" level="DEBUG" additivity="false">
+        <appender-ref ref="kafkaConsumer"/>
+    </logger>
+
+    <logger name="kafka.controller" level="DEBUG" additivity="false">
+        <appender-ref ref="kafkaController"/>
+    </logger>
+
+    <logger name="kafka.request" level="DEBUG" additivity="false">
+        <appender-ref ref="kafkaRequest"/>
+    </logger>
+
+    <logger name="org.apache.kafka" level="DEBUG" additivity="false">
+        <appender-ref ref="kafkaClient"/>
+    </logger>
+
+    <logger name="kafka" level="DEBUG" additivity="false">
+        <appender-ref ref="kafka"/>
+    </logger>
+
+    <logger name="org.apache.http" level="DEBUG" additivity="false">
+        <appender-ref ref="httpwire"/>
+    </logger>
+
+    <logger name="com.amazonaws" level="DEBUG" additivity="false">
+        <appender-ref ref="awsClient"/>
+    </logger>
+
+    <logger name="akka" level="DEBUG" additivity="false">
+        <appender-ref ref="akka"/>
+    </logger>
+
+    <logger name="org.springframework" level="DEBUG" additivity="false">
+        <appender-ref ref="reporter"/>
+    </logger>
+
+    <logger name="io.eventStreamAnalytics.reporter" level="DEBUG" additivity="false">
+        <appender-ref ref="reporter"/>
+    </logger>
+
+    <logger name="io.eventStreamAnalytics.server" level="DEBUG" additivity="false">
+        <appender-ref ref="frontServer"/>
+    </logger>
+
+    <logger name="io.eventStreamAnalytics.worker" level="DEBUG" additivity="false">
+        <appender-ref ref="worker"/>
+    </logger>
+
+    <logger name="com.hazelcast" level="DEBUG" additivity="false">
+        <appender-ref ref="hazelcast"/>
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>

@@ -35,14 +35,13 @@ object Dependencies {
   private val junitVersion = "4.12"
 
   val akka = Seq("akka-actor", "akka-slf4j").map("com.typesafe.akka" %% _ % akkaVersion)
-  //val logback = Seq("logback-classic").map("ch.qos.logback" % _ % "1.0.9")
 
-  val slf4jLog4j = Seq("slf4j-log4j12").map("org.slf4j" % _ % "1.7.6")
+  val logback = Seq("ch.qos.logback" % "logback-classic" % "1.1.3")
+
   val spray = Seq("spray-can").map("io.spray" % _ % sprayVersion)
   val sprayClient = Seq("spray-client").map("io.spray" % _ % sprayVersion)
   val sprayJson = Seq("spray-json").map("io.spray" %% _ % sprayVersion)
-  val sprayRouting = Seq("spray-routing").map("io.spray" % _ % sprayVersion)
-  val json4s = Seq("json4s-native").map("org.json4s" %% _ % "3.3.0")
+
   val apacheCommon = Seq("commons-io").map("commons-io" % _ % "2.4")
   val apacheLang = Seq("commons-lang3").map("org.apache.commons" % _ % "3.4")
 
@@ -85,31 +84,27 @@ object EventStreamAnalyticsBuild extends Build {
     settings = buildSettingsJava
   ).settings(
     libraryDependencies ++= dynamoDBClient ++ guava ++ apacheLang ++ spring ++ springDynamoDb
-      ++ springBoot,
-    excludeDependencies ++= Seq(
-      SbtExclusionRule("ch.qos.logback", "logback-classic"),
-      SbtExclusionRule("ch.qos.logback", "logback-core"),
-      SbtExclusionRule("org.slf4j", "log4j-over-slf4j")
-    )
+      ++ springBoot
   )
 
   lazy val front = Project(
     "event-stream-analytics-front",
     file("front"),
     settings = buildSettings
-  ).settings(libraryDependencies ++= spray ++ kafka ++ akka ++ guava)
+  ).settings(
+    libraryDependencies ++= spray ++ kafka ++ akka ++ guava,
+    excludeDependencies ++= Seq(
+      SbtExclusionRule("log4j", "log4j"),
+      SbtExclusionRule("org.slf4j", "slf4j-log4j12")
+    )
+  )
 
   lazy val reporter = Project(
     "event-stream-analytics-reporter-rest",
     file("reporter-rest"),
     settings = buildSettingsJava
   ).settings(
-    libraryDependencies ++= spring ++ springDynamoDb ++ springUI ++ springBoot ++ slf4jLog4j,
-    excludeDependencies ++= Seq(
-      SbtExclusionRule("ch.qos.logback", "logback-classic"),
-      SbtExclusionRule("ch.qos.logback", "logback-core"),
-      SbtExclusionRule("org.slf4j", "log4j-over-slf4j")
-    )
+    libraryDependencies ++= spring ++ springDynamoDb ++ springUI ++ springBoot
   )
     .dependsOn(common)
 
@@ -117,7 +112,13 @@ object EventStreamAnalyticsBuild extends Build {
     "event-stream-analytics-worker",
     file("worker-node"),
     settings = buildSettingsJava
-  ).settings(libraryDependencies ++= kafka ++ akka ++ guava ++ hazelCast ++ dynamoDBClient)
+  ).settings(
+    libraryDependencies ++= kafka ++ akka ++ guava ++ hazelCast ++ dynamoDBClient,
+    excludeDependencies ++= Seq(
+      SbtExclusionRule("log4j", "log4j"),
+      SbtExclusionRule("org.slf4j", "slf4j-log4j12")
+    )
+  )
     .dependsOn(common)
 
   lazy val integrationTest = Project(
@@ -135,8 +136,8 @@ object EventStreamAnalyticsBuild extends Build {
       libraryDependencies ++= zookeeper ++ junit ++ junitInterface ++ sprayClient ++ sprayJson ++ apacheCommon ++
         dynamoDB,
       excludeDependencies ++= Seq(
-        SbtExclusionRule("ch.qos.logback", "logback-classic"),
-        SbtExclusionRule("ch.qos.logback", "logback-core")
+        SbtExclusionRule("log4j", "log4j"),
+        SbtExclusionRule("org.slf4j", "slf4j-log4j12")
       )
     )
 

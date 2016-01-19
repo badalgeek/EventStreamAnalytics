@@ -16,7 +16,7 @@ import scala.concurrent.duration._
 /**
   * Created by badal on 1/4/16.
   */
-class EventHandler extends Actor with ActorLogging {
+class EventHandler extends Actor {
 
   implicit val timeout: Timeout = 1.second
   import context.dispatcher

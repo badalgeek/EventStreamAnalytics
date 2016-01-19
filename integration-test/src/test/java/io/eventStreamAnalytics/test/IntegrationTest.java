@@ -51,7 +51,12 @@ public class IntegrationTest {
     }
 
     private void cleanUp() throws IOException {
-        File file = new File("target/tmp");
+        cleanDirIfExist("target/tmp");
+        cleanDirIfExist("target/logs");
+    }
+
+    private void cleanDirIfExist(String pathname) throws IOException {
+        File file = new File(pathname);
         if (file.exists()) {
             logger.debug("Deleting Temp File from:" + file.getAbsolutePath());
             FileUtils.forceDelete(file);
