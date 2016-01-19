@@ -25,7 +25,7 @@ class ReportingProcessor extends Pipeline {
     responseFuture.value.get.get.entity.asString
   }
 
-  override def getPort(): Int = 8081
+  override def getPort(): Int = 9000
 
   override def getHost(): String = "localhost"
 }

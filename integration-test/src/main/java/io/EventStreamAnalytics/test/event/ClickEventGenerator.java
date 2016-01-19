@@ -1,6 +1,6 @@
 package io.EventStreamAnalytics.test.event;
 
-import io.eventStreamAnalytics.worker.model.Event;
+import io.eventStreamAnalytics.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;

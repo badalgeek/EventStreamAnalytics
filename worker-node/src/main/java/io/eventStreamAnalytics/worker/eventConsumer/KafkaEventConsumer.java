@@ -6,7 +6,8 @@ import akka.actor.Props;
 import com.google.common.collect.ImmutableMap;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import io.eventStreamAnalytics.worker.eventProcessor.EventActor;
+import io.eventStreamAnalytics.worker.eventProcessor.DynamoDBEventActor;
+import io.eventStreamAnalytics.worker.eventProcessor.HazelcastEventActor;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
@@ -26,7 +27,8 @@ import java.util.Properties;
 public class KafkaEventConsumer {
 
     private ConsumerConnector consumerConnector;
-    private ActorRef eventActor;
+    private ActorRef hazelcastEventActor;
+    private ActorRef dynamoDBEventActor;
     private static Logger logger = LoggerFactory.getLogger(KafkaEventConsumer.class);
 
     public KafkaEventConsumer() {
@@ -34,7 +36,8 @@ public class KafkaEventConsumer {
         Config config = ConfigFactory.load();
         Config eventStreamAnalyticsFront = config.getConfig("EventStreamAnalyticsFront");
         ActorSystem system = ActorSystem.create("EventStreamAnalyticsWorker", eventStreamAnalyticsFront);
-        eventActor = system.actorOf(Props.create(EventActor.class), "eventHandler");
+        hazelcastEventActor = system.actorOf(Props.create(HazelcastEventActor.class), "hazelcastEventHandler");
+        dynamoDBEventActor = system.actorOf(Props.create(DynamoDBEventActor.class), "dynamoDbEventHandler");
         Properties props = new Properties();
         props.put("zookeeper.connect", "localhost:2181");
         props.put("group.id", "eventProcessor");
@@ -54,7 +57,8 @@ public class KafkaEventConsumer {
         }
         KafkaStream<String, String> stream = events.get(0);
         for (MessageAndMetadata<String, String> next : stream) {
-            eventActor.tell(next.message(), null);
+            hazelcastEventActor.tell(next.message(), null);
+            dynamoDBEventActor.tell(next.message(), null);
         }
     }
 
