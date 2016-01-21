@@ -23,7 +23,7 @@ export const HOT_LOADER_PORT      = 5578;
 
 export const BOOTSTRAP_MODULE     = ENABLE_HOT_LOADING ? 'hot_loader_main' : 'main';
 
-export const APP_TITLE            = 'My Angular2 App';
+export const APP_TITLE            = 'Event Stream Analytics Dashboard';
 
 export const APP_SRC              = 'app';
 export const ASSETS_SRC           = `${APP_SRC}/assets`;
@@ -64,14 +64,17 @@ export const DEV_NPM_DEPENDENCIES: InjectableDependency[] = normalizeDependencie
   { src: 'angular2/bundles/angular2.js', inject: 'libs', dest: JS_DEST },
   { src: 'angular2/bundles/router.js', inject: 'libs', dest: JS_DEST },
   { src: 'angular2/bundles/http.js', inject: 'libs', dest: JS_DEST },
-  { src: 'bootstrap/dist/css/bootstrap.css', inject: true, dest: CSS_DEST }
+  { src: 'bootstrap/dist/css/bootstrap.css', inject: true, dest: CSS_DEST },
+  { src: 'font-awesome/css/font-awesome.min.css', inject: true, dest: CSS_DEST },
+  { src: 'chart.js/Chart.min.js', inject: true, dest: CSS_DEST }
 ]);
 
 export const PROD_NPM_DEPENDENCIES: InjectableDependency[] = normalizeDependencies([
   { src: 'reflect-metadata/Reflect.js', inject: 'shims' },
   { src: 'es6-shim/es6-shim.min.js', inject: 'shims' },
   { src: 'angular2/bundles/angular2-polyfills.min.js', inject: 'libs' },
-  { src: 'bootstrap/dist/css/bootstrap.min.css', inject: true }
+  { src: 'bootstrap/dist/css/bootstrap.min.css', inject: true },
+
 ]);
 
 // Declare local files that needs to be injected
@@ -93,7 +96,8 @@ const SYSTEM_CONFIG_DEV = {
     rxjs: { defaultExtension: false }
   },
   map: {
-      'ng2-bootstrap': '/target/dev/lib/ng2-bootstrap'
+      'ng2-bootstrap': '/target/dev/lib/ng2-bootstrap',
+      'ng2-charts': '/target/dev/lib/ng2-charts'
   }
 };
 

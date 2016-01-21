@@ -11,13 +11,13 @@ export = function buildJSDev(gulp, plugins) {
               ];
 
     let result = gulp.src(src)
-      .pipe(plugins.plumber())
+      //.pipe(plugins.plumber())
       .pipe(plugins.sourcemaps.init())
       .pipe(plugins.typescript(tsProject));
 
     return result.js
       .pipe(plugins.sourcemaps.write())
-      .pipe(plugins.template(templateLocals()))
+      //.pipe(plugins.template(templateLocals()))
       .pipe(gulp.dest(APP_DEST));
   };
 };

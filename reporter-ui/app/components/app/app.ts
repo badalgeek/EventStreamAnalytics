@@ -4,9 +4,9 @@ import {
   ROUTER_DIRECTIVES
 } from 'angular2/router';
 
-import {HomeCmp} from '../home/home';
-import {AboutCmp} from '../about/about';
+import {DailyDashboard} from '../dailyDashboard/dailyDashboard';
 import {NameList} from '../../services/name_list';
+import {Header} from '../header/header';
 
 @Component({
   selector: 'app',
@@ -14,10 +14,11 @@ import {NameList} from '../../services/name_list';
   templateUrl: './components/app/app.html',
   styleUrls: ['./components/app/app.css'],
   encapsulation: ViewEncapsulation.None,
-  directives: [ROUTER_DIRECTIVES]
+  directives: [Header, ROUTER_DIRECTIVES]
 })
 @RouteConfig([
-  { path: '/', component: HomeCmp, as: 'Home' },
-  { path: '/about', component: AboutCmp, as: 'About' }
+  { path: '/', redirectTo: ['/DailyDashboard'] },
+  { path: '/dashboard', component: DailyDashboard, as: 'DailyDashboard' },
 ])
 export class AppCmp {}
+

@@ -4,20 +4,21 @@ import {DROPDOWN_DIRECTIVES, ACCORDION_DIRECTIVES} from 'ng2-bootstrap';
 import {ROUTER_DIRECTIVES} from 'angular2/router';
 
 @Component({
-    selector: 'header',
-    templateUrl: './components/header/header.html',
+    selector: 'sidebar',
+    templateUrl: './components/header/sidebar.html',
+    styleUrls: ['./components/header/sidebar.css'],
     directives: []
 })
-export class Header {
-
+export class Sidebar {
 }
 
 @Component({
-    selector: 'sidebar',
-    templateUrl: './components/header/sidebar.html',
-    directives: [ROUTER_DIRECTIVES, ACCORDION_DIRECTIVES]
+    selector: 'header',
+    templateUrl: './components/header/header.html',
+    styleUrls: ['./components/header/header.css'],
+    directives: [Sidebar]
 })
-export class Sidebar {
+export class Header {
 }
 
 @Component({
@@ -32,15 +33,3 @@ export class HeaderNotification {
     }
 }
 
-@Component({
-    selector: 'wrapper',
-    template: `<div id="wrapper">
-      <header></header>
-      <div id="page-wrapper" style="min-height: 561px;">
-        <ng-content></ng-content>
-      </div>
-    </div>`,
-    directives: [Header, CORE_DIRECTIVES]
-})
-export class WrapperCmp {
-}

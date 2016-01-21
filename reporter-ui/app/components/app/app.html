@@ -1,8 +1,6 @@
-<section class="sample-app-content">
-  <nav>
-    <a [routerLink]="['/Home']">Home</a>
-    <a [routerLink]="['/About']">About</a>
-  </nav>
-
-  <router-outlet></router-outlet>
-</section>
+<div id="wrapper">
+    <header></header>
+    <div id="page-wrapper" style="min-height: 561px;">
+        <router-outlet></router-outlet>
+    </div>
+</div>
