@@ -1,12 +1,9 @@
 package io.eventStreamAnalytics.model;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import com.amazonaws.services.dynamodbv2.document.Item;
 import com.google.common.base.Splitter;
+import org.bson.Document;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -14,19 +11,29 @@ import java.util.Map;
 /**
  * Created by badal on 1/9/16.
  */
-@DynamoDBTable(tableName = "events")
+@org.springframework.data.mongodb.core.mapping.Document(collection = "events")
 public class Event implements Serializable {
 
     @Id
-    private EventId eventId;
+    @Field(value = "id")
+    private String uuId;
+    @Field(value = "c")
+    private String customerId;
+    @Field(value = "s")
     private String sessionId;
+    @Field(value = "e")
     private String eventName;
+    @Field(value = "u")
     private String url;
+
+    public Event() {
+    }
 
     public Event(String message) {
         try {
             Map<String, String> split = Splitter.on("&").withKeyValueSeparator("=").split(message);
-            this.eventId = new EventId(split.get("id"), split.get("c"));
+            this.uuId = split.get("id");
+            this.customerId = split.get("c");
             this.sessionId = split.get("s");
             this.eventName = split.get("e");
             this.url = split.get("u");
@@ -36,61 +43,39 @@ public class Event implements Serializable {
         }
     }
 
-    public Event() {
-    }
-
     public Event(String customerId, String sessionId, String eventName, String url) {
-        this.eventId = new EventId("", customerId);
+        this.customerId = customerId;
         this.sessionId = sessionId;
         this.eventName = eventName;
         this.url = url;
     }
 
-    @DynamoDBAttribute(attributeName = "s")
     public String getSessionId() {
         return sessionId;
     }
 
-    @DynamoDBAttribute(attributeName = "e")
     public String getEventName() {
         return eventName;
     }
 
-    @DynamoDBAttribute(attributeName = "u")
     public String getUrl() {
         return url;
     }
 
-    public EventId getEventId() {
-        return eventId;
-    }
-
-    @DynamoDBHashKey(attributeName = "c")
     public String getCustomerId() {
-        return eventId.getCustomerId();
+        return this.customerId;
     }
 
-    @DynamoDBRangeKey(attributeName = "id")
     public String getUuId() {
-        return eventId.getUuId();
+        return this.uuId;
     }
 
     public void setUuId(String uuId) {
-        if (eventId == null) {
-            eventId = new EventId();
-        }
-        this.eventId.setUuId(uuId);
+        this.uuId = uuId;
     }
 
     public void setCustomerId(String customerId) {
-        if (eventId == null) {
-            eventId = new EventId();
-        }
-        this.eventId.setCustomerId(customerId);
-    }
-
-    public void setEventId(EventId eventId) {
-        this.eventId = eventId;
+        this.customerId = customerId;
     }
 
     public void setSessionId(String sessionId) {
@@ -108,20 +93,19 @@ public class Event implements Serializable {
     public String deSerialize() {
         StringBuilder sb = new StringBuilder();
         sb.append("/events?");
-        sb.append("c=").append(eventId.getCustomerId());
+        sb.append("c=").append(customerId);
         sb.append("&s=").append(sessionId);
         sb.append("&e=").append(eventName);
         sb.append("&u=").append(url);
         return sb.toString();
     }
 
-    public Item getItem() {
-        return new Item()
-                .withPrimaryKey("c", eventId.getCustomerId())
-                .withString("id", eventId.getUuId())
-                .withString("s", getSessionId())
-                .withString("e", getEventName())
-                .withString("u", getUrl());
+    public Document getDbObject() {
+        return new Document()
+                .append("c", getCustomerId())
+                .append("id", getUuId())
+                .append("s", getSessionId())
+                .append("e", getEventName())
+                .append("u", getUrl());
     }
-
 }

@@ -1,11 +1,15 @@
 package io.eventStreamAnalytics.test;
 
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
-import com.amazonaws.services.dynamodbv2.model.*;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
+import de.flapdoodle.embed.mongo.MongodExecutable;
+import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.IMongodConfig;
+import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.process.runtime.Network;
 import io.EventStreamAnalytics.test.event.EventGenerator;
 import io.EventStreamAnalytics.test.event.EventGeneratorFactory;
 import io.EventStreamAnalytics.test.event.EventGeneratorListenerImpl;
@@ -41,13 +45,12 @@ public class IntegrationTest {
     public void setUp() throws IOException, InterruptedException {
         //Arrays.asList(System.getProperty("java.class.path").split(":")).stream().forEach(s -> System.out.println(s));
         cleanUp();
-        startDynamoDb();
-        createDynamoDbTable();
+        startMangoDb();
+        startReporter();
         startZookeeper();
         startKafka();
         startWorker();
         startFrontServer();
-        startReporter();
     }
 
     private void cleanUp() throws IOException {
@@ -114,68 +117,35 @@ public class IntegrationTest {
         }, "Reporter");
     }
 
-    private void startDynamoDb() {
-        String property = System.getProperty("java.class.path");
-        List<String> dylib = Arrays.asList(property.split(":")).stream().filter(s -> s.endsWith("dylib"))
-                .collect(Collectors.toList());
-        if(!dylib.isEmpty()) {
-            System.load(dylib.get(0));
-        }
+    private void startMangoDb() throws InterruptedException {
         startInNewThreadAndClassloader(() -> {
             try {
-                String[] localArgs = { "-sharedDb", "-inMemory" };
-                ServerRunner.main(localArgs);
+                MongodStarter starter = MongodStarter.getDefaultInstance();
+                IMongodConfig mongodConfig = new MongodConfigBuilder()
+                        .version(Version.Main.PRODUCTION)
+                        .net(new Net(12345, Network.localhostIsIPv6()))
+                        .build();
+                logger.debug("Would download MangoDB if not yet downloaded.");
+                MongodExecutable mongodExecutable = starter.prepare(mongodConfig);
+                logger.debug("Done with doloading MangoDB exec.");
+                mongodExecutable.start();
+
+                MongoClientURI uri = new MongoClientURI("mongodb://localhost:12345/eventStreamAnalytics");
+                MongoClient client = new MongoClient(uri);
+                MongoDatabase mongoDatabase = client.getDatabase(uri.getDatabase());
+                mongoDatabase.createCollection("events");
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
-        }, "DynamoDB");
+        }, "MangoDB").join();
     }
 
-    private void startInNewThreadAndClassloader(Runnable runnable, String zookeeper) {
+    private Thread startInNewThreadAndClassloader(Runnable runnable, String zookeeper) {
         Thread thread = new Thread(runnable);
         thread.setContextClassLoader(SYSTEM_CLASS_LOADER);
         thread.setName(zookeeper);
         thread.start();
-    }
-
-    private void createDynamoDbTable() throws InterruptedException {
-        //Thread.sleep(40000);
-        BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials("test", "test");
-        AmazonDynamoDBClient client = new AmazonDynamoDBClient(basicAWSCredentials);
-        client.setEndpoint("http://localhost:8000");
-        DynamoDB dynamoDB = new DynamoDB(client);
-        List<AttributeDefinition> attributeDefinitions = new ArrayList<AttributeDefinition>();
-
-        attributeDefinitions.add(new AttributeDefinition()
-                .withAttributeName("c")
-                .withAttributeType("S"));
-        ArrayList<KeySchemaElement> keySchema = new ArrayList<KeySchemaElement>();
-        keySchema.add(new KeySchemaElement()
-                .withAttributeName("c")
-                .withKeyType(KeyType.HASH)); //Partition key
-
-        attributeDefinitions.add(new AttributeDefinition()
-                .withAttributeName("id")
-                .withAttributeType("S"));
-        keySchema.add(new KeySchemaElement()
-                .withAttributeName("id")
-                .withKeyType(KeyType.RANGE)); //Sort key
-
-        String tableName = "events";
-        CreateTableRequest request = new CreateTableRequest()
-                .withTableName(tableName)
-                .withKeySchema(keySchema)
-                .withAttributeDefinitions(attributeDefinitions)
-                .withProvisionedThroughput(new ProvisionedThroughput()
-                        .withReadCapacityUnits(5L)
-                        .withWriteCapacityUnits(6L));
-
-        logger.debug("Issuing CreateTable request for " + tableName);
-        Table table = dynamoDB.createTable(request);
-
-        logger.debug("Waiting for " + tableName
-                + " to be created...this may take a while...");
-        table.waitForActive();
+        return thread;
     }
 
 }

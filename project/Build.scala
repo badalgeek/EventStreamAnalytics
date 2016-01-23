@@ -51,18 +51,21 @@ object Dependencies {
   val guava = Seq("guava").map("com.google.guava" % _ % "19.0")
 
   val hazelCast = Seq("hazelcast-all").map("com.hazelcast" % _ % "3.5.4")
-  val dynamoDBClient = Seq("aws-java-sdk-dynamodb").map("com.amazonaws" % _ % "1.10.47")
+//  val dynamoDBClient = Seq("aws-java-sdk-dynamodb").map("com.amazonaws" % _ % "1.10.47")
 
-  val springBoot = Seq("spring-boot-starter-web").map("org.springframework.boot" % _ % "1.3.1.RELEASE")
+  val springBoot = Seq("spring-boot-starter-data-rest", "spring-boot-starter-data-mongodb").map("org.springframework.boot" % _ % "1.3.1.RELEASE")
   val spring = Seq("spring-data-rest-webmvc").map("org.springframework.data" % _ % "2.4.2.RELEASE")
   val springCore = Seq("spring-data-commons").map("org.springframework.data" % _ % "1.11.2.RELEASE")
   val springUI = Seq("spring-data-rest-hal-browser").map("org.springframework.data" % _ % "2.4.2.RELEASE")
-  val springDynamoDb = Seq("spring-data-dynamodb").map("org.socialsignin" % _ % "4.2.1")
-  val dynamoDB = Seq("DynamoDBLocal").map("com.amazonaws" % _ % "1.10.5.1" % Test)
+//  val springDynamoDb = Seq("spring-data-dynamodb").map("org.socialsignin" % _ % "4.2.1")
+//  val dynamoDB = Seq("DynamoDBLocal").map("com.amazonaws" % _ % "1.10.5.1" % Test)
 
   val junit = Seq("junit").map("junit" % _ % junitVersion % Test)
   val junitInterface = Seq("junit-interface").map("com.novocode" % _ % "0.11" % Test)
   val scalaTest = Seq("scalatest").map("org.scalatest" % _ % "2.2.2" % Test)
+
+  val mangoDBEmbedded = Seq("de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.2")
+  val mangoDbClient = Seq("org.mongodb" % "mongo-java-driver" % "3.2.1")
 }
 
 object EventStreamAnalyticsBuild extends Build {
@@ -83,7 +86,7 @@ object EventStreamAnalyticsBuild extends Build {
     file("common"),
     settings = buildSettingsJava
   ).settings(
-    libraryDependencies ++= dynamoDBClient ++ guava ++ apacheLang ++ spring ++ springDynamoDb
+    libraryDependencies ++=  guava ++ apacheLang ++ spring  ++ mangoDbClient
       ++ springBoot
   )
 
@@ -104,7 +107,7 @@ object EventStreamAnalyticsBuild extends Build {
     file("reporter-rest"),
     settings = buildSettingsJava
   ).settings(
-    libraryDependencies ++= spring ++ springDynamoDb ++ springUI ++ springBoot
+    libraryDependencies ++= spring ++ springUI ++ springBoot
   )
     .dependsOn(common)
 
@@ -113,7 +116,7 @@ object EventStreamAnalyticsBuild extends Build {
     file("worker-node"),
     settings = buildSettingsJava
   ).settings(
-    libraryDependencies ++= kafka ++ akka ++ guava ++ hazelCast ++ dynamoDBClient,
+    libraryDependencies ++= kafka ++ akka ++ guava ++ hazelCast ++ mangoDbClient,
     excludeDependencies ++= Seq(
       SbtExclusionRule("log4j", "log4j"),
       SbtExclusionRule("org.slf4j", "slf4j-log4j12")
@@ -134,13 +137,12 @@ object EventStreamAnalyticsBuild extends Build {
       classpathTypes ++= Set("dylib"),
       parallelExecution in Test := false,
       libraryDependencies ++= zookeeper ++ junit ++ junitInterface ++ sprayClient ++ sprayJson ++ apacheCommon ++
-        dynamoDB,
+        mangoDBEmbedded,
       excludeDependencies ++= Seq(
         SbtExclusionRule("log4j", "log4j"),
         SbtExclusionRule("org.slf4j", "slf4j-log4j12")
       )
     )
-
 
   lazy val publishedProjects = Seq[ProjectReference](
     front,

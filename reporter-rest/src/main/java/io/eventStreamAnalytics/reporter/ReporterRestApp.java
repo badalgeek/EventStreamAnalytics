@@ -1,10 +1,10 @@
 package io.eventStreamAnalytics.reporter;
 
-import io.eventStreamAnalytics.reporter.config.SpringDataDynamoConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,12 +14,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 /**
  * Created by badal on 1/15/16.
  */
-@Configuration
-@ComponentScan(basePackages = "io.eventStreamAnalytics.reporter")
-@EnableAutoConfiguration
-@EnableEntityLinks
-@EnableAsync
-@Import(value = {SpringDataDynamoConfig.class})
+@SpringBootApplication
 public class ReporterRestApp {
 
     private static Logger logger = LoggerFactory.getLogger(ReporterRestApp.class);

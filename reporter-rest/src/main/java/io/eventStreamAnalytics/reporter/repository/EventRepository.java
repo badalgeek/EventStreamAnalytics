@@ -1,17 +1,17 @@
 package io.eventStreamAnalytics.reporter.repository;
 
 import io.eventStreamAnalytics.model.Event;
-import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 /**
  * Created by badal on 1/18/16.
  */
-@EnableScan
-@RepositoryRestResource
-public interface EventRepository extends CrudRepository<Event, String> {
+@RepositoryRestResource(collectionResourceRel = "events", path = "events")
+public interface EventRepository extends MongoRepository<Event, String> {
 
-    Long countByCustomerId(@Param("status") String customerId);
+    @RestResource(rel = "totalEventCount")
+    Long countByCustomerId(@Param("customerId") String customerId);
 }
