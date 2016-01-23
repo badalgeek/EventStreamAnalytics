@@ -28,10 +28,6 @@ import io.eventStreamAnalytics.reporter.ReporterRestApp;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by badal on 12/27/15.
@@ -125,9 +121,9 @@ public class IntegrationTest {
                         .version(Version.Main.PRODUCTION)
                         .net(new Net(12345, Network.localhostIsIPv6()))
                         .build();
-                logger.debug("Would download MangoDB if not yet downloaded.");
+                logger.debug("Would download MongoDB if not yet downloaded.");
                 MongodExecutable mongodExecutable = starter.prepare(mongodConfig);
-                logger.debug("Done with doloading MangoDB exec.");
+                logger.debug("Done with downloading MongoDB exec.");
                 mongodExecutable.start();
 
                 MongoClientURI uri = new MongoClientURI("mongodb://localhost:12345/eventStreamAnalytics");
