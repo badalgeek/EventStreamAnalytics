@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,7 +16,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 /**
  * Created by badal on 1/15/16.
  */
-@SpringBootApplication
+@EnableAutoConfiguration(exclude={MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
+@ComponentScan
+@Import(MongoConfig.class)
 public class ReporterRestApp {
 
     private static Logger logger = LoggerFactory.getLogger(ReporterRestApp.class);
