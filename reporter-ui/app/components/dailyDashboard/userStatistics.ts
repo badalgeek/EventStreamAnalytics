@@ -1,7 +1,10 @@
 import {Component} from 'angular2/core';
+import {Injectable,Inject} from 'angular2/core';
 import {CHART_DIRECTIVES} from 'ng2-charts';
 import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
-
+import {UserStatisticsService} from '../../services/userStatisticsService';
+import {TotalCustomer} from '../../services/TotalCustomer';
+@Injectable()
 @Component({
     selector: 'user-statistics',
     templateUrl: './components/dailyDashboard/userStatistics.html',
@@ -10,8 +13,11 @@ import {CORE_DIRECTIVES, FORM_DIRECTIVES, NgClass} from 'angular2/common';
 })
 export class UserStatistics {
 
-    constructor() {
+ userStatisticsService:UserStatisticsService;
+
+    constructor(@Inject(UserStatisticsService) userStatisticsService) {
         console.log('line demo');
+        this.userStatisticsService = userStatisticsService;
     }
 
     // lineChart
@@ -82,5 +88,7 @@ export class UserStatistics {
     chartHovered(e:any) {
         console.log(e);
     }
-
+    getCount() {
+      return this.userStatisticsService.getCount();
+    }
 }
