@@ -74,7 +74,7 @@ public class IntegrationTest {
     public void test() throws Exception {
         generateEvents();
 
-        Thread.sleep(50000000);
+        Thread.sleep(50000);
         ReportingProcessor reportingProcessor = new ReportingProcessor();
         String value = reportingProcessor.processRequestAndGetBody("/events/customers");
         List<TotalCustomer> actuallist = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {}, value);
@@ -93,11 +93,11 @@ public class IntegrationTest {
             EventGenerator clickEventGenerator = EventGeneratorFactory.getClickEventGenerator(
                     100, 10, new EventGeneratorListenerImpl());
             EventGenerator androidEventGenerator = EventGeneratorFactory.getDeviceEventGenerator(
-                    90, 19, "android", new EventGeneratorListenerImpl());
+                    90, 19, "Android", new EventGeneratorListenerImpl());
             EventGenerator iPhoneEventGenerator = EventGeneratorFactory.getDeviceEventGenerator(
-                    80, 15, "iOS", new EventGeneratorListenerImpl());
+                    80, 15, "IOS", new EventGeneratorListenerImpl());
             EventGenerator windowsEventGenerator = EventGeneratorFactory.getDeviceEventGenerator(
-                    70, 6, "windows", new EventGeneratorListenerImpl());
+                    70, 6, "Windows", new EventGeneratorListenerImpl());
             clickEventGenerator.generate();
             androidEventGenerator.generate();
             iPhoneEventGenerator.generate();
