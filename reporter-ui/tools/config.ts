@@ -64,7 +64,6 @@ export const DEV_NPM_DEPENDENCIES: InjectableDependency[] = normalizeDependencie
   { src: 'angular2/bundles/angular2.js', inject: 'libs', dest: JS_DEST },
   { src: 'angular2/bundles/router.js', inject: 'libs', dest: JS_DEST },
   { src: 'angular2/bundles/http.js', inject: 'libs', dest: JS_DEST },
-  { src: 'angular2-rest/angular2-rest.js', inject: 'libs', dest: JS_DEST },
   { src: 'bootstrap/dist/css/bootstrap.css', inject: true, dest: CSS_DEST },
   { src: 'font-awesome/css/font-awesome.min.css', inject: true, dest: CSS_DEST },
   { src: 'chart.js/Chart.min.js', inject: true, dest: CSS_DEST }
@@ -98,8 +97,7 @@ const SYSTEM_CONFIG_DEV = {
   },
   map: {
       'ng2-bootstrap': '/target/dev/lib/ng2-bootstrap',
-      'ng2-charts': '/target/dev/lib/ng2-charts',
-      'angular2-rest': '/node_modules/angular2-rest/angular2-rest.js'
+      'ng2-charts': '/target/dev/lib/ng2-charts'
   }
 };
 

@@ -1,18 +1,24 @@
-import {Request, Response, Http} from 'angular2/http';
 import {Injectable} from 'angular2/core';
-import {RESTClient, GET, PUT, POST, DELETE, BaseUrl, Headers, DefaultHeaders, Path, Body, Query} from 'angular2-rest';
-import {Constants} from '../StageSettings/Constants';
-import { Observable} from 'rxjs/Observable' ;
+import {Http, Headers, Response} from 'angular2/http';
+import {Observable} from 'rxjs/Observable' ;
 import {TotalCustomer} from './TotalCustomer';
-@Injectable()
-@BaseUrl ( 'http://http://localhost:9000/')
-@DefaultHeaders({
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-})
-export class UserStatisticsService extends RESTClient {
+import 'rxjs/add/operator/map';
 
-  @GET('events/customers')
-   public getCount(): Observable<Array<TotalCustomer>> { return null; };
+@Injectable()
+export class UserStatisticsService {
+
+    http:Http;
+    headers:Headers;
+
+    constructor(http:Http) {
+        this.http = http;
+        this.headers = new Headers();
+        this.headers.set('Content-Type', 'application/json');
+    }
+
+    public getCount():Observable<Array<TotalCustomer>> {
+        return this.http.get('http://localhost:9000/events/customers').map(
+            (response: Response) => response.json());
+    }
 
 }

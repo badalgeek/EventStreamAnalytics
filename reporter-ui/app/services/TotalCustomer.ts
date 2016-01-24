@@ -1,6 +1,4 @@
 export class TotalCustomer {
-
-
     deviceId:string;
     total:number;
 

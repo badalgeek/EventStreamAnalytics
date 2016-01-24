@@ -74,7 +74,7 @@ public class IntegrationTest {
     public void test() throws Exception {
         generateEvents();
 
-        Thread.sleep(50000);
+        Thread.sleep(50000000);
         ReportingProcessor reportingProcessor = new ReportingProcessor();
         String value = reportingProcessor.processRequestAndGetBody("/events/customers");
         List<TotalCustomer> actuallist = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {}, value);

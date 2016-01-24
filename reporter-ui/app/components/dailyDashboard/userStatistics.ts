@@ -13,13 +13,6 @@ import {TotalCustomer} from '../../services/TotalCustomer';
 })
 export class UserStatistics {
 
- userStatisticsService:UserStatisticsService;
-
-    constructor(@Inject(UserStatisticsService) userStatisticsService) {
-        console.log('line demo');
-        this.userStatisticsService = userStatisticsService;
-    }
-
     // lineChart
     private lineChartData:Array<any> = [
         [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55,
@@ -87,8 +80,5 @@ export class UserStatistics {
 
     chartHovered(e:any) {
         console.log(e);
-    }
-    getCount() {
-      return this.userStatisticsService.getCount();
     }
 }
