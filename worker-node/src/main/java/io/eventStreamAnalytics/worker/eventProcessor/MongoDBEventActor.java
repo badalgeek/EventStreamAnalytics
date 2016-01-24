@@ -40,10 +40,9 @@ public class MongoDBEventActor extends UntypedActor {
             }, getContext().system().dispatcher());
             f.onSuccess(new OnSuccess<Event>() {
                 @Override public final void onSuccess(Event t) {
-                    log.debug("Processed String message: {}", t);
+                    log.debug("Processed String message: {}", message);
                 }
             }, getContext().system().dispatcher());
-            log.info("Processed String message: {}", message);
         }
         else
             unhandled(message);
