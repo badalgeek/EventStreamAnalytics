@@ -66,6 +66,8 @@ object Dependencies {
 
   val mangoDBEmbedded = Seq("de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.50.2")
   val mangoDbClient = Seq("org.mongodb" % "mongo-java-driver" % "3.2.1")
+
+  val apacheCli = Seq("commons-cli" % "commons-cli" % "1.3.1")
 }
 
 object EventStreamAnalyticsBuild extends Build {
@@ -95,7 +97,7 @@ object EventStreamAnalyticsBuild extends Build {
     file("front"),
     settings = buildSettings
   ).settings(
-    libraryDependencies ++= spray ++ kafka ++ akka ++ guava,
+    libraryDependencies ++= spray ++ kafka ++ akka ++ guava ++ apacheCli,
     excludeDependencies ++= Seq(
       SbtExclusionRule("log4j", "log4j"),
       SbtExclusionRule("org.slf4j", "slf4j-log4j12")
@@ -116,7 +118,7 @@ object EventStreamAnalyticsBuild extends Build {
     file("worker-node"),
     settings = buildSettingsJava
   ).settings(
-    libraryDependencies ++= kafka ++ akka ++ guava ++ hazelCast ++ mangoDbClient,
+    libraryDependencies ++= kafka ++ akka ++ guava ++ hazelCast ++ mangoDbClient ++ apacheCli,
     excludeDependencies ++= Seq(
       SbtExclusionRule("log4j", "log4j"),
       SbtExclusionRule("org.slf4j", "slf4j-log4j12")
@@ -143,6 +145,7 @@ object EventStreamAnalyticsBuild extends Build {
         SbtExclusionRule("org.slf4j", "slf4j-log4j12")
       )
     )
+
 
   lazy val publishedProjects = Seq[ProjectReference](
     front,

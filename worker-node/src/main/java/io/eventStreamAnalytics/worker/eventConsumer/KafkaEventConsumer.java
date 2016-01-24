@@ -31,11 +31,8 @@ public class KafkaEventConsumer {
     private ActorRef mangoDBEventActor;
     private static Logger logger = LoggerFactory.getLogger(KafkaEventConsumer.class);
 
-    public KafkaEventConsumer() {
+    public KafkaEventConsumer(ActorSystem system) {
         logger.debug("Initilizing Consumer");
-        Config config = ConfigFactory.load();
-        Config eventStreamAnalyticsFront = config.getConfig("EventStreamAnalyticsWorker");
-        ActorSystem system = ActorSystem.create("EventStreamAnalyticsWorker", eventStreamAnalyticsFront);
         hazelcastEventActor = system.actorOf(Props.create(HazelcastEventActor.class), "hazelcastEventHandler");
         mangoDBEventActor = system.actorOf(Props.create(MongoDBEventActor.class), "mongoDbEventHandler");
         Properties props = new Properties();

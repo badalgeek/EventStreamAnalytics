@@ -4,3 +4,8 @@ scala:
 
 jdk:
     - oraclejdk8
+
+notifications:
+  slack:
+    rooms:
+      - eastream:imZJjpfQvgmWUjQh3tbPDslI#ci
