@@ -4,13 +4,14 @@ import java.util.Properties
 
 import com.typesafe.config.ConfigFactory
 import io.eventStreamAnalytics.server.eventProcessor.KafkaConfig._
+import io.eventStreamAnalytics.server.front.Server
 
 trait KafkaConfig extends Properties {
 
   private val consumerPrefixWithDot = prefix + "."
   private val allKeys = Seq(brokers, keySerializer, valueSerializer, clientId)
 
-  lazy val typesafeConfig = ConfigFactory.load()
+  lazy val typesafeConfig = Server.server.getRootConfig()
 
   allKeys.map { key =>
     if (typesafeConfig.hasPath(key))

@@ -1,3 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/badalgeek/EventStreamAnalytics.png?label=ready&title=Ready)](https://waffle.io/badalgeek/EventStreamAnalytics)
+[![Build Status](https://travis-ci.org/badalgeek/EventStreamAnalytics.svg?branch=master)](https://travis-ci.org/badalgeek/EventStreamAnalytics)
 # EventStreamAnalytics
 Provide analytics for event streams from click event, mobile app or backend

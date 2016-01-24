@@ -73,6 +73,14 @@
         </encoder>
     </appender>
 
+    <appender name="mongodb" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/mongodb.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="reporter" class="ch.qos.logback.core.FileAppender">
         <file>target/logs/reporter.log</file>
         <append>true</append>
@@ -91,14 +99,6 @@
 
     <appender name="worker" class="ch.qos.logback.core.FileAppender">
         <file>target/logs/worker.log</file>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
-        </encoder>
-    </appender>
-
-    <appender name="awsClient" class="ch.qos.logback.core.FileAppender">
-        <file>target/logs/awsClient.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
@@ -165,8 +165,8 @@
         <appender-ref ref="httpwire"/>
     </logger>
 
-    <logger name="com.amazonaws" level="DEBUG" additivity="false">
-        <appender-ref ref="awsClient"/>
+    <logger name="org.mongodb.driver" level="DEBUG" additivity="false">
+        <appender-ref ref="mongodb"/>
     </logger>
 
     <logger name="akka" level="DEBUG" additivity="false">
