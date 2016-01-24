@@ -46,7 +46,7 @@ public class IntegrationTest {
         //Arrays.asList(System.getProperty("java.class.path").split(":")).stream().forEach(s -> logger.info(s));
         cleanUp();
         startMangoDb();
-//        startReporter();
+        startReporter();
         startZookeeper();
         startKafka();
         startWorker();
