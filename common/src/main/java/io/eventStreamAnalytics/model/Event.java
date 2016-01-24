@@ -25,6 +25,8 @@ public class Event implements Serializable {
     private String eventName;
     @Field(value = "u")
     private String url;
+    @Field(value = "d")
+    private String deviceId;
 
     public Event() {
     }
@@ -37,17 +39,20 @@ public class Event implements Serializable {
             this.sessionId = split.get("s");
             this.eventName = split.get("e");
             this.url = split.get("u");
+            this.deviceId = split.get("d");
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             throw ex;
         }
     }
 
-    public Event(String customerId, String sessionId, String eventName, String url) {
+    public Event(String customerId, String sessionId, String eventName, String url, String deviceId) {
         this.customerId = customerId;
         this.sessionId = sessionId;
         this.eventName = eventName;
         this.url = url;
+        this.deviceId = deviceId;
+
     }
 
     public String getSessionId() {
@@ -90,6 +95,14 @@ public class Event implements Serializable {
         this.url = url;
     }
 
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
     public String deSerialize() {
         StringBuilder sb = new StringBuilder();
         sb.append("/events?");
@@ -97,6 +110,7 @@ public class Event implements Serializable {
         sb.append("&s=").append(sessionId);
         sb.append("&e=").append(eventName);
         sb.append("&u=").append(url);
+        sb.append("&d=").append(deviceId);
         return sb.toString();
     }
 
@@ -106,6 +120,7 @@ public class Event implements Serializable {
                 .append("id", getUuId())
                 .append("s", getSessionId())
                 .append("e", getEventName())
+                .append("d", getDeviceId())
                 .append("u", getUrl());
     }
 }

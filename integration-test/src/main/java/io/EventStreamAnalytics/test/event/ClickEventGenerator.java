@@ -13,13 +13,14 @@ public class ClickEventGenerator implements EventGenerator {
 
     private EventGeneratorListener eventGeneratorListener;
     private String customerId;
+    private String deviceId;
     private List<String> sessionIdList;
     private List<String> pageList;
     private List<MutableInteger> front;
     private Random random;
     private int size;
 
-    public ClickEventGenerator(String customerId, List<String> sessionIdList, List<String> pageList) {
+    public ClickEventGenerator(String customerId, List<String> sessionIdList, List<String> pageList, String deviceId) {
         this.customerId = customerId;
         this.sessionIdList = sessionIdList;
         this.pageList = pageList;
@@ -29,6 +30,7 @@ public class ClickEventGenerator implements EventGenerator {
             front.add(new MutableInteger(0));
         }
         this.random = new Random();
+        this.deviceId = deviceId;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class ClickEventGenerator implements EventGenerator {
         while (!sessionIdList.isEmpty()) {
             int i = random.nextInt(size);
             String sessionId = sessionIdList.get(i);
-            Event event = new Event(customerId, sessionId, "click", pageList.get(front.get(i).getValue()));
+            Event event = new Event(customerId, sessionId, "click", pageList.get(front.get(i).getValue()), deviceId );
             front.get(i).setValue(front.get(i).getValue() + 1);
             if ((front.get(i).getValue()) >= pageList.size()) {
                 front.remove(i);

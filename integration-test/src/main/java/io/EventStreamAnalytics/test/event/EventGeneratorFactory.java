@@ -12,7 +12,8 @@ public class EventGeneratorFactory {
     public static EventGenerator getClickEventGenerator(int noOfSession, int noOfPage,
                                                         EventGeneratorListener eventGeneratorListener) {
         List<String> pageList = getPageList(noOfPage, "/page/page");
-        ClickEventGenerator testCustomer = new ClickEventGenerator("TestCustomer", getSessionList(noOfSession), pageList);
+        ClickEventGenerator testCustomer = new ClickEventGenerator("TestCustomer",
+                getSessionList(noOfSession), pageList, "browser");
         testCustomer.setEventGeneratorListener(eventGeneratorListener);
         return testCustomer;
     }

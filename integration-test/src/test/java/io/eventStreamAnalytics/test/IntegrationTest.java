@@ -42,7 +42,7 @@ public class IntegrationTest {
         //Arrays.asList(System.getProperty("java.class.path").split(":")).stream().forEach(s -> System.out.println(s));
         cleanUp();
         startMangoDb();
-        startReporter();
+//        startReporter();
         startZookeeper();
         startKafka();
         startWorker();
