@@ -11,19 +11,28 @@ public class EventGeneratorFactory {
 
     public static EventGenerator getClickEventGenerator(int noOfSession, int noOfPage,
                                                         EventGeneratorListener eventGeneratorListener) {
-        List<String> pageList = getPageList(noOfPage, "/page/page");
+        List<String> pageList = getAutoList(noOfPage, "/page/page");
         ClickEventGenerator testCustomer = new ClickEventGenerator("TestCustomer",
-                getSessionList(noOfSession), pageList, "browser");
+                getSessionList(noOfSession), pageList);
         testCustomer.setEventGeneratorListener(eventGeneratorListener);
         return testCustomer;
     }
 
-    private static List<String> getPageList(int noOfPage, String page) {
-        List<String> pageList = new ArrayList<>();
-        for (int i = 0; i < noOfPage; i++) {
-            pageList.add(page + i);
+    public static EventGenerator getDeviceEventGenerator(int noOfSession, int noOfActivity, String deviceType,
+                                                        EventGeneratorListener eventGeneratorListener) {
+        List<String> activityList = getAutoList(noOfActivity, "activity");
+        DeviceEventGenerator testCustomer = new DeviceEventGenerator("TestCustomer",
+                getSessionList(noOfSession), activityList, deviceType);
+        testCustomer.setEventGeneratorListener(eventGeneratorListener);
+        return testCustomer;
+    }
+
+    private static List<String> getAutoList(int sizeOfList, String prefix) {
+        List<String> activityList = new ArrayList<>();
+        for (int i = 0; i < sizeOfList; i++) {
+            activityList.add((prefix + i));
         }
-        return pageList;
+        return activityList;
     }
 
     private static List<String> getSessionList(int noOfSession) {

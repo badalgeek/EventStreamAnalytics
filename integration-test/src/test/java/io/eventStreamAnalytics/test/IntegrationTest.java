@@ -1,5 +1,6 @@
 package io.eventStreamAnalytics.test;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoDatabase;
@@ -13,6 +14,8 @@ import de.flapdoodle.embed.process.runtime.Network;
 import io.EventStreamAnalytics.test.event.EventGenerator;
 import io.EventStreamAnalytics.test.event.EventGeneratorFactory;
 import io.EventStreamAnalytics.test.event.EventGeneratorListenerImpl;
+import io.eventStreamAnalytics.model.TotalCustomer;
+import io.eventStreamAnalytics.model.utils.CommonUtil;
 import io.eventStreamAnalytics.reporter.ReporterRestApp;
 import io.eventStreamAnalytics.server.front.Server;
 import io.eventStreamAnalytics.test.event.ReportingProcessor;
@@ -21,6 +24,7 @@ import junit.framework.Assert;
 import kafka.Kafka;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.zookeeper.server.quorum.QuorumPeerMain;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by badal on 12/27/15.
@@ -73,15 +76,32 @@ public class IntegrationTest {
 
         Thread.sleep(50000);
         ReportingProcessor reportingProcessor = new ReportingProcessor();
-        String value = reportingProcessor.processRequestAndGetBody("/events/count");
-        Assert.assertEquals("1000", value);
+        String value = reportingProcessor.processRequestAndGetBody("/events/customers");
+        List<TotalCustomer> actuallist = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {}, value);
+        String fixturePath = "io/eventStreamAnalytics/test/fixtures/DeviceList.json";
+        String expectedJson = IOUtils.toString(IntegrationTest.class.getClassLoader().getResourceAsStream(fixturePath));
+        List<TotalCustomer> expectedList = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {}, expectedJson);
+
+        Assert.assertEquals(expectedList.size(), actuallist.size());
+        for(int i=0; i< expectedList.size(); i++) {
+            Assert.assertEquals(expectedList.get(i), actuallist.get(i));
+        }
     }
 
     private void generateEvents() {
         try {
             EventGenerator clickEventGenerator = EventGeneratorFactory.getClickEventGenerator(
                     100, 10, new EventGeneratorListenerImpl());
+            EventGenerator androidEventGenerator = EventGeneratorFactory.getDeviceEventGenerator(
+                    90, 19, "android", new EventGeneratorListenerImpl());
+            EventGenerator iPhoneEventGenerator = EventGeneratorFactory.getDeviceEventGenerator(
+                    80, 15, "iOS", new EventGeneratorListenerImpl());
+            EventGenerator windowsEventGenerator = EventGeneratorFactory.getDeviceEventGenerator(
+                    70, 6, "windows", new EventGeneratorListenerImpl());
             clickEventGenerator.generate();
+            androidEventGenerator.generate();
+            iPhoneEventGenerator.generate();
+            windowsEventGenerator.generate();
         } catch (Exception ex) {
             logger.error("Failed to generate ", ex);
         }
