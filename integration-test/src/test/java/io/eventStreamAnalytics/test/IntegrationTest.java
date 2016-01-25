@@ -9,6 +9,7 @@ import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.config.Storage;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import io.EventStreamAnalytics.test.event.EventGenerator;
@@ -32,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -40,6 +40,10 @@ import java.util.List;
  * Created by badal on 12/27/15.
  */
 public class IntegrationTest {
+
+    static {
+        cleanDirIfExist("target/logs");
+    }
 
     public static final ClassLoader SYSTEM_CLASS_LOADER = ClassLoader.getSystemClassLoader();
     private static Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
@@ -59,14 +63,16 @@ public class IntegrationTest {
 
     private void cleanUp() throws IOException {
         cleanDirIfExist("target/tmp");
-        cleanDirIfExist("target/logs");
     }
 
-    private void cleanDirIfExist(String pathname) throws IOException {
+    private static void cleanDirIfExist(String pathname) {
         File file = new File(pathname);
         if (file.exists()) {
-            logger.debug("Deleting Temp File from:" + file.getAbsolutePath());
-            FileUtils.forceDelete(file);
+            try {
+                FileUtils.forceDelete(file);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete File:" + file.getAbsolutePath(), e);
+            }
         }
     }
 
@@ -77,14 +83,16 @@ public class IntegrationTest {
         Thread.sleep(50000);
         ReportingProcessor reportingProcessor = new ReportingProcessor();
         String value = reportingProcessor.processRequestAndGetBody("/events/customers");
-        List<TotalCustomer> actuallist = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {}, value);
+        List<TotalCustomer> actuallist = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {
+        }, value);
         String fixturePath = "io/eventStreamAnalytics/test/fixtures/DeviceList.json";
         String expectedJson = IOUtils.toString(IntegrationTest.class.getClassLoader().getResourceAsStream(fixturePath));
-        List<TotalCustomer> expectedList = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {}, expectedJson);
+        List<TotalCustomer> expectedList = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {
+        }, expectedJson);
 
         Assert.assertEquals(expectedList.size(), actuallist.size());
-        for(int i=0; i< expectedList.size(); i++) {
-            Assert.assertEquals(expectedList.get(i), actuallist.get(i));
+        for (TotalCustomer expectedObject : expectedList) {
+            Assert.assertTrue(actuallist.contains(expectedObject));
         }
     }
 
@@ -103,7 +111,8 @@ public class IntegrationTest {
             iPhoneEventGenerator.generate();
             windowsEventGenerator.generate();
         } catch (Exception ex) {
-            logger.error("Failed to generate ", ex);
+            logger.error("Failed to generate events:", ex);
+            throw ex;
         }
     }
 
@@ -113,25 +122,36 @@ public class IntegrationTest {
                 String kafkaConfig = IntegrationTest.class.getClassLoader().getResource("server.properties").getPath();
                 logger.debug("Starting Kafka server using config:" + kafkaConfig);
                 Kafka.main(new String[]{kafkaConfig});
-            } catch (Exception ex) {
+            } catch (RuntimeException ex) {
                 logger.error("Failed to start kafka", ex);
+                throw ex;
             }
         }, "Kafka");
     }
 
     private void startZookeeper() {
         startInNewThreadAndClassloader(() -> {
-            String zookeeperConfig = IntegrationTest.class.getClassLoader().getResource("zookeeper.properties").getPath();
-            logger.debug("Starting Zookeeper server using config:" + zookeeperConfig);
-            QuorumPeerMain.main(new String[]{zookeeperConfig});
+            try {
+                String zookeeperConfig = IntegrationTest.class.getClassLoader().getResource("zookeeper.properties").getPath();
+                logger.debug("Starting Zookeeper server using config:" + zookeeperConfig);
+                QuorumPeerMain.main(new String[]{zookeeperConfig});
+            } catch (RuntimeException ex) {
+                logger.error("Failed to start zookeeper", ex);
+                throw ex;
+            }
         }, "Zookeeper");
     }
 
     private void startFrontServer() {
         startInNewThreadAndClassloader(() -> {
-            String frontConfig = IntegrationTest.class.getClassLoader().getResource("test-application.conf").getPath();
-            logger.debug("Starting Front server from config file:" + frontConfig);
-            Server.main(new String[]{"-config", frontConfig});
+            try {
+                String frontConfig = IntegrationTest.class.getClassLoader().getResource("test-application.conf").getPath();
+                logger.debug("Starting Front server from config file:" + frontConfig);
+                Server.main(new String[]{"-config", frontConfig});
+            } catch (RuntimeException ex) {
+                logger.error("Failed to start kafka", ex);
+                throw ex;
+            }
         }, "WorkerServer");
     }
 
@@ -150,7 +170,12 @@ public class IntegrationTest {
 
     private void startReporter() {
         startInNewThreadAndClassloader(() -> {
-            ReporterRestApp.main(new String[]{});
+            try {
+                ReporterRestApp.main(new String[]{});
+            } catch (RuntimeException ex) {
+                logger.error("Failed to start reporter", ex);
+                throw ex;
+            }
         }, "Reporter");
     }
 
@@ -161,6 +186,8 @@ public class IntegrationTest {
                 IMongodConfig mongodConfig = new MongodConfigBuilder()
                         .version(Version.Main.PRODUCTION)
                         .net(new Net(12345, Network.localhostIsIPv6()))
+                        .pidFile(new File("target/process.pid").getAbsolutePath())
+                        .replication(new Storage(new File("target/tmp/mongodb/").getAbsolutePath(), null, 0))
                         .build();
                 logger.debug("Would download MongoDB if not yet downloaded.");
                 MongodExecutable mongodExecutable = starter.prepare(mongodConfig);
@@ -172,9 +199,11 @@ public class IntegrationTest {
                 MongoDatabase mongoDatabase = client.getDatabase(uri.getDatabase());
                 mongoDatabase.createCollection("events");
             } catch (Exception ex) {
+                logger.error("Failed to start MongoDB", ex);
                 throw new RuntimeException(ex);
             }
         }, "MangoDB").join();
+        logger.debug("Successfully Started MongoDB.");
     }
 
     private Thread startInNewThreadAndClassloader(Runnable runnable, String zookeeper) {

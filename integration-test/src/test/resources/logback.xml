@@ -121,6 +121,22 @@
         </encoder>
     </appender>
 
+    <appender name="spray" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/spray.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="eventGeneration" class="ch.qos.logback.core.FileAppender">
+        <file>target/logs/eventGeneration.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{45} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -191,6 +207,18 @@
 
     <logger name="com.hazelcast" level="DEBUG" additivity="false">
         <appender-ref ref="hazelcast"/>
+    </logger>
+
+    <logger name="spray.can" level="DEBUG" additivity="false">
+        <appender-ref ref="spray"/>
+    </logger>
+
+    <logger name="org.hibernate" level="DEBUG" additivity="false">
+        <appender-ref ref="reporter"/>
+    </logger>
+
+    <logger name="io.EventStreamAnalytics.test.event" level="DEBUG" additivity="false">
+        <appender-ref ref="eventGeneration"/>
     </logger>
 
     <root level="debug">

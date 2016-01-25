@@ -1,6 +1,6 @@
 [
   {
-    "deviceId": "android",
+    "deviceId": "Android",
     "total": 90
   },
   {
@@ -8,11 +8,11 @@
     "total": 100
   },
   {
-    "deviceId": "iOS",
+    "deviceId": "IOS",
     "total": 80
   },
   {
-    "deviceId": "windows",
+    "deviceId": "Windows",
     "total": 70
   }
 ]
