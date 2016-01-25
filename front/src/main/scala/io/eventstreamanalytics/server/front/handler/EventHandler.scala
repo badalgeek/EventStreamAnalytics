@@ -34,10 +34,17 @@ class EventHandler extends Actor {
         case x: Stats => client ! statsPresentation(x)
       }
 
+    case HttpRequest(GET, Uri.Path("/ping"), _, _, _) =>
+      sender ! ping()
+
     case r@HttpRequest(GET, Uri.Path("/events"), _, _, _) =>
       eventActor ! r.uri.query.toString()
       sender ! HttpResponse()
   }
+
+  def ping() = HttpResponse(
+    entity = HttpEntity(`text/html`, "Hola")
+  )
 
   def statsPresentation(s: Stats) = HttpResponse(
     entity = HttpEntity(`text/html`,

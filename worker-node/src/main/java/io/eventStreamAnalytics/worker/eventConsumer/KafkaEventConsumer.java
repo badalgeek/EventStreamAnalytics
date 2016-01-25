@@ -24,7 +24,7 @@ import java.util.Properties;
 /**
  * Created by badal on 1/8/16.
  */
-public class KafkaEventConsumer {
+public class KafkaEventConsumer implements Runnable {
 
     private ConsumerConnector consumerConnector;
     private ActorRef hazelcastEventActor;
@@ -47,7 +47,7 @@ public class KafkaEventConsumer {
         logger.debug("Intialized Consumer");
     }
 
-    public void start() {
+    public void run() {
         Map<String, List<KafkaStream<String, String>>> topicMessageStreams =
                 consumerConnector.createMessageStreams(ImmutableMap.of("events", 1),
                         new StringDecoder(null), new StringDecoder(null));

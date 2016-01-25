@@ -217,7 +217,7 @@
         <appender-ref ref="reporter"/>
     </logger>
 
-    <logger name="io.EventStreamAnalytics.test.event" level="DEBUG" additivity="false">
+    <logger name="io.eventStreamAnalytics.test.event" level="DEBUG" additivity="false">
         <appender-ref ref="eventGeneration"/>
     </logger>
 

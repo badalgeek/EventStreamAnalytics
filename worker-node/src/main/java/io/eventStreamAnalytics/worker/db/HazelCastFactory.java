@@ -16,24 +16,7 @@ public class HazelCastFactory {
 
     public synchronized static HazelcastInstance getInstance() {
         if (instance == null) {
-            //Config config = new XmlConfigBuilder().build();
             instance = Hazelcast.newHazelcastInstance();
-//            final AtomicBoolean isStarted = new AtomicBoolean();
-//            instance.getLifecycleService().addLifecycleListener(new LifecycleListener() {
-//                @Override
-//                public void stateChanged(LifecycleEvent event) {
-//                    if(event.getState() == LifecycleEvent.LifecycleState.STARTED){
-//                        isStarted.set(true);
-//                    }
-//                }
-//            });
-//            while(!isStarted.get()) {
-//                try {
-//                    Thread.sleep(50);
-//                } catch (InterruptedException ex) {
-//                    throw new RuntimeException(ex);
-//                }
-//            }
         }
         return instance;
     }

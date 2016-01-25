@@ -15,11 +15,13 @@ import java.io.File;
 public class WorkerMain {
 
     public static final String CONFIG = "config";
+    private static final String EMBEDDED = "embedded";
     private CommandLine cmd;
 
     public WorkerMain(String[] args) throws ParseException {
         Options options = new Options();
         options.addOption(CONFIG, true, "Config File Full Path");
+        options.addOption(EMBEDDED, false, "If Worker running as embedded");
         CommandLineParser parser = new DefaultParser();
         cmd = parser.parse( options, args);
     }
@@ -35,7 +37,11 @@ public class WorkerMain {
         Config eventStreamAnalyticsFront = rootConfig.getConfig("EventStreamAnalyticsWorker");
         ActorSystem system = ActorSystem.create("EventStreamAnalyticsWorker", eventStreamAnalyticsFront);
         KafkaEventConsumer consumer = new KafkaEventConsumer(system);
-        consumer.start();
+        if(cmd.hasOption(EMBEDDED)) {
+            new Thread(consumer).start();
+        } else {
+            consumer.run();
+        }
     }
 
     public static void main(String[] args) throws ParseException {

@@ -1,4 +1,4 @@
-package io.EventStreamAnalytics.test.event;
+package io.eventStreamAnalytics.test.event;
 
 import io.eventStreamAnalytics.model.Event;
 

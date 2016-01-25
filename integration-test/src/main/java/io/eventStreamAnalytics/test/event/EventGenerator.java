@@ -1,4 +1,4 @@
-package io.EventStreamAnalytics.test.event;
+package io.eventStreamAnalytics.test.event;
 
 /**
  * Created by sbadal on 1/9/16.
