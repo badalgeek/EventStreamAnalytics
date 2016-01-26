@@ -30,7 +30,7 @@ public class EventRepositoryImpl implements EventDao {
 
         Aggregation agg = newAggregation(
                 group("deviceId","sessionId"),
-                group("deviceId").first("deviceId").as("deviceId").count().as("total")
+                group("deviceId").first("deviceId").as("deviceType").count().as("total")
         );
 
         //Convert the aggregation result into a List
