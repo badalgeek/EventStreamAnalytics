@@ -1,18 +1,18 @@
 [
   {
-    "deviceId": "Android",
+    "deviceType": "Android",
     "total": 90
   },
   {
-    "deviceId": "Browser",
+    "deviceType": "Browser",
     "total": 100
   },
   {
-    "deviceId": "IOS",
+    "deviceType": "IOS",
     "total": 80
   },
   {
-    "deviceId": "Windows",
+    "deviceType": "Windows",
     "total": 70
   }
 ]
