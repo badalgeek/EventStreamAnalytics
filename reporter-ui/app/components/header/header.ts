@@ -7,7 +7,7 @@ import {ROUTER_DIRECTIVES} from 'angular2/router';
     selector: 'sidebar',
     templateUrl: './components/header/sidebar.html',
     styleUrls: ['./components/header/sidebar.css'],
-    directives: []
+    directives: [ROUTER_DIRECTIVES]
 })
 export class Sidebar {
 }
