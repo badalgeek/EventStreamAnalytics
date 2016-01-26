@@ -5,7 +5,7 @@ package io.eventStreamAnalytics.test.event
   */
 class EventProcessor extends HttpProcessor {
 
-  override def getPort(): Int = 8080
+  override def getPort(): Int = 8086
 
   override def getHost(): String = "localhost"
 }

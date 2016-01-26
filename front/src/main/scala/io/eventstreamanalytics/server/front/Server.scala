@@ -40,7 +40,7 @@ class Server() {
     // the handler actor replies to incoming HttpRequests
     val handler = system.actorOf(Props[EventHandler], name = "handler")
 
-    IO(Http) ! Http.Bind(handler, interface = "localhost", port = 8080)
+    IO(Http) ! Http.Bind(handler, interface = "localhost", port = 8086)
   }
 
   def getCommandLine(args: Array[String]): CommandLine = {

@@ -1,6 +1,5 @@
 package io.eventStreamAnalytics.test.event;
 
-import io.eventStreamAnalytics.test.event.EventProcessor;
 import io.eventStreamAnalytics.model.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ public class EventGeneratorListenerImpl implements EventGeneratorListener {
 
     @Override
     public void onMessage(Event event) {
-        String eventString = event.deSerialize();
+        String eventString = event.serialize();
         logger.debug("Event Generated:" + eventString);
         eventProcessor.processRequest(eventString);
     }

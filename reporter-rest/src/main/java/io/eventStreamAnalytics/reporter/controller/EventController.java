@@ -1,6 +1,7 @@
 package io.eventStreamAnalytics.reporter.controller;
 
-import io.eventStreamAnalytics.model.TotalCustomer;
+import io.eventStreamAnalytics.dto.UniqueCustomerCountByDeviceType;
+import io.eventStreamAnalytics.dto.UniqueEndUsersCountAtTime;
 import io.eventStreamAnalytics.reporter.repository.EventRepository;
 import io.eventStreamAnalytics.reporter.repository.EventRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,15 @@ public class EventController {
     @CrossOrigin(origins = LOCALHOST)
     @RequestMapping(value = "/events/customers", method = RequestMethod.GET)
     @ResponseBody
-    public List<TotalCustomer> getUniqueCustomer() {
+    public List<UniqueCustomerCountByDeviceType> getUniqueCustomer() {
         return (eventRepositoryImpl.getCustomerCount());
+    }
+
+
+    @CrossOrigin(origins = LOCALHOST)
+    @RequestMapping(value = "/events/customers_by_time", method = RequestMethod.GET)
+    @ResponseBody
+    public List<UniqueEndUsersCountAtTime> getUniqueEndUsersCountByTime() {
+        return (eventRepositoryImpl.getUniqueEndUsersCountByTime());
     }
 }

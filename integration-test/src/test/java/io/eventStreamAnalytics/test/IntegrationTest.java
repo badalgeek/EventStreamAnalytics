@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.eventStreamAnalytics.test.event.EventGenerator;
 import io.eventStreamAnalytics.test.event.EventGeneratorFactory;
 import io.eventStreamAnalytics.test.event.EventGeneratorListenerImpl;
-import io.eventStreamAnalytics.model.TotalCustomer;
-import io.eventStreamAnalytics.model.utils.CommonUtil;
+import io.eventStreamAnalytics.dto.UniqueCustomerCountByDeviceType;
+import io.eventStreamAnalytics.utils.CommonUtils;
 import io.eventStreamAnalytics.test.event.ReportingProcessor;
 import io.eventStreamAnalytics.test.testServer.TestServerManager;
 import junit.framework.Assert;
@@ -37,15 +37,15 @@ public class IntegrationTest {
         Thread.sleep(10000);
         ReportingProcessor reportingProcessor = new ReportingProcessor();
         String value = reportingProcessor.processRequestAndGetBody("/events/customers");
-        List<TotalCustomer> actuallist = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {
+        List<UniqueCustomerCountByDeviceType> actuallist = CommonUtils.fromJSON(new TypeReference<List<UniqueCustomerCountByDeviceType>>() {
         }, value);
         String fixturePath = "io/eventStreamAnalytics/test/fixtures/DeviceList.json";
         String expectedJson = IOUtils.toString(IntegrationTest.class.getClassLoader().getResourceAsStream(fixturePath));
-        List<TotalCustomer> expectedList = CommonUtil.fromJSON(new TypeReference<List<TotalCustomer>>() {
+        List<UniqueCustomerCountByDeviceType> expectedList = CommonUtils.fromJSON(new TypeReference<List<UniqueCustomerCountByDeviceType>>() {
         }, expectedJson);
 
         Assert.assertEquals(expectedList.size(), actuallist.size());
-        for (TotalCustomer expectedObject : expectedList) {
+        for (UniqueCustomerCountByDeviceType expectedObject : expectedList) {
             Assert.assertTrue(actuallist.contains(expectedObject));
         }
     }

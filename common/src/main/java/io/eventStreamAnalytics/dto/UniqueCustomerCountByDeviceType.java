@@ -1,20 +1,20 @@
-package io.eventStreamAnalytics.model;
+package io.eventStreamAnalytics.dto;
 
 /**
  * Created by sandeep on 23/1/16.
  */
-public class TotalCustomer {
+public class UniqueCustomerCountByDeviceType {
 
-    private String deviceId;
+    private String deviceType;
 
     private long total;
 
-    public String getDeviceId() {
-        return deviceId;
+    public String getDeviceType() {
+        return deviceType;
     }
 
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
     public long getTotal() {
@@ -30,16 +30,16 @@ public class TotalCustomer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TotalCustomer that = (TotalCustomer) o;
+        UniqueCustomerCountByDeviceType that = (UniqueCustomerCountByDeviceType) o;
 
         if (total != that.total) return false;
-        return deviceId != null ? deviceId.equals(that.deviceId) : that.deviceId == null;
+        return deviceType != null ? deviceType.equals(that.deviceType) : that.deviceType == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = deviceId != null ? deviceId.hashCode() : 0;
+        int result = deviceType != null ? deviceType.hashCode() : 0;
         result = 31 * result + (int) (total ^ (total >>> 32));
         return result;
     }

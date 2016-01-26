@@ -6,6 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /**
@@ -27,6 +30,18 @@ public class Event implements Serializable {
     private String url;
     @Field(value = "d")
     private String deviceId;
+    @Field(value = "da")
+    private Long dateTimeinMillis;
+    @Field(value = "day")
+    private int day;
+    @Field(value = "mo")
+    private int month;
+    @Field(value = "y")
+    private int year;
+    @Field(value = "ho")
+    private int hour;
+
+    private transient LocalDateTime dateTime;
 
     public Event() {
     }
@@ -40,18 +55,31 @@ public class Event implements Serializable {
             this.eventName = split.get("e");
             this.url = split.get("u");
             this.deviceId = split.get("d");
+            this.dateTime = LocalDateTime.parse(split.get("date"),DateTimeFormatter.ofPattern("yyyy.MM.dd.HH:mm:ss:SSS"));
+            this.dateTimeinMillis = this.dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            this.year = this.dateTime.getYear();
+            this.month = this.dateTime.getMonthValue();
+            this.day = this.dateTime.getDayOfMonth();
+            this.hour = this.dateTime.getHour();
+
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             throw ex;
         }
     }
 
-    public Event(String customerId, String sessionId, String eventName, String url, String deviceId) {
+    public Event(String customerId, String sessionId, String eventName, String url, String deviceId, LocalDateTime dateTime) {
         this.customerId = customerId;
         this.sessionId = sessionId;
         this.eventName = eventName;
         this.url = url;
         this.deviceId = deviceId;
+        this.dateTime = dateTime;
+        this.dateTimeinMillis = dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        this.year = dateTime.getYear();
+        this.month = dateTime.getMonthValue();
+        this.day = dateTime.getDayOfMonth();
+        this.hour = dateTime.getHour();
 
     }
 
@@ -103,7 +131,56 @@ public class Event implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public String deSerialize() {
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public Long getDateTimeinMillis() {
+        return dateTimeinMillis;
+    }
+
+    public void setDateTimeinMillis(Long dateTimeinMillis) {
+        this.dateTimeinMillis = dateTimeinMillis;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public String serialize() {
         StringBuilder sb = new StringBuilder();
         sb.append("/events?");
         sb.append("c=").append(customerId);
@@ -111,6 +188,8 @@ public class Event implements Serializable {
         sb.append("&e=").append(eventName);
         sb.append("&u=").append(url);
         sb.append("&d=").append(deviceId);
+        sb.append("&udate=").append(dateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd.HH:mm:ss:SSS")));
+
         return sb.toString();
     }
 
@@ -121,6 +200,11 @@ public class Event implements Serializable {
                 .append("s", getSessionId())
                 .append("e", getEventName())
                 .append("d", getDeviceId())
-                .append("u", getUrl());
+                .append("u", getUrl())
+                .append("da", getDateTimeinMillis())
+                .append("y", getYear())
+                .append("day", getDay())
+                .append("mo", getMonth())
+                .append("ho", getHour());
     }
 }

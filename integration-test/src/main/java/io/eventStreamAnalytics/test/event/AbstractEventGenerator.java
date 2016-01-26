@@ -2,6 +2,7 @@ package io.eventStreamAnalytics.test.event;
 
 import io.eventStreamAnalytics.model.Event;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +39,7 @@ public class AbstractEventGenerator implements EventGenerator {
         while (!sessionIdList.isEmpty()) {
             int i = random.nextInt(size);
             String sessionId = sessionIdList.get(i);
-            Event event = new Event(customerId, sessionId, "click", flowList.get(front.get(i).getValue()), deviceId );
+            Event event = new Event(customerId, sessionId, "click", flowList.get(front.get(i).getValue()), deviceId, LocalDateTime.now());
             front.get(i).setValue(front.get(i).getValue() + 1);
             if ((front.get(i).getValue()) >= flowList.size()) {
                 front.remove(i);
